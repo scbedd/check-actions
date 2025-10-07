@@ -18,7 +18,7 @@ jobs:
           echo "PR author: ${{ github.event.pull_request.user.login }}"
 
       - name: "Post comment on copilot PR"
-        if: ${{ github.event.pull_request.user.login == 'Copilot' }}
+        if: ${{ github.event.pull_request.user.login == 'github-copilot' }}
         uses: actions/github-script@v7
         id: post-comment
         with:
@@ -36,8 +36,7 @@ jobs:
             const issue_number = pr.number;
 
             const marker = '<!-- copilot-pr-verification-reminder -->';
-            const body = `${marker}\n**Note:** Copilot PRs must be verified for trustworthiness, then commented with ` +
-              '`/azp run mcp - pullrequest - live` to get livetest invocations on AI submitted PRs.`;
+            const body = marker + '\n**Note:** Copilot PRs must be verified for trustworthiness, then commented with `/azp run mcp - pullrequest - live` to get livetest invocations on AI submitted PRs.';
 
             // Check existing comments to avoid posting duplicates.
             const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number });
