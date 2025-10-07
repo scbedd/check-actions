@@ -18,7 +18,7 @@ jobs:
           echo "PR author: ${{ github.event.pull_request.user.login }}"
 
       - name: "Post comment on copilot PR"
-        if: ${{ github.event.pull_request.user.login == 'github-copilot' }}
+        if: ${{ github.event.pull_request.user.login == 'Copilot' }}
         uses: actions/github-script@v7
         id: post-comment
         with:
