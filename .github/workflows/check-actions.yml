@@ -9,16 +9,16 @@ permissions:
 
 jobs:
   copilot-check:
-    if: ${{ github.event.pull_request.user.login == 'github-copilot' }}
     name: Process Copilot PR for additional actions
     runs-on: ubuntu-24.04
     steps:
       - name: Print PR info
         run: |
-          echo "Triggered by PR from Copilot"
+          echo "Triggered by PR User:"
           echo "PR author: ${{ github.event.pull_request.user.login }}"
 
-      - name: "Post comment on PR"
+      - name: "Post comment on copilot PR"
+        if: ${{ github.event.pull_request.user.login == 'github-copilot' }}
         uses: actions/github-script@v7
         id: post-comment
         with:
