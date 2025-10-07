@@ -19,3 +19,5 @@ Pros:
 - Easily customizable
 - Works pretty consistently
 - Good security story (pull_request_target), just leaving a comment so not a huge deal
+
+[Example of this working](https://github.com/scbedd/check-actions/pull/5)
