@@ -1,5 +1,7 @@
 # Copilot PRs either automatically run mcp - pullrequest - live OR leaves a comment for the same
 
+This repo is investigating possible solutions to [this issue](https://github.com/microsoft/mcp/issues/697)
+
 ## Giving copilot `write` access to the repo
 
 This is just a terrible plan. I don't think there is a good solution here. Maybe we add copilot to the list of contributors?
