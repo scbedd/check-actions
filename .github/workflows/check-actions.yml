@@ -1,0 +1,53 @@
+name: Pull Request Processing
+
+on:
+  pull_request_target:
+      types: [opened, reopened, synchronize]
+
+permissions:
+  issues: write
+
+jobs:
+  copilot-check:
+    if: ${{ github.event.pull_request.user.login == 'github-copilot' }}
+    name: Process Copilot PR for additional actions
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Print PR info
+        run: |
+          echo "Triggered by PR from Copilot"
+          echo "PR author: ${{ github.event.pull_request.user.login }}"
+
+      - name: "Post comment on PR"
+        uses: actions/github-script@v7
+        id: post-comment
+        with:
+          script: |
+            // Post a single reminder comment on the PR. If the marker is found in
+            // an existing comment, do not post again (prevents duplicates).
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              core.warning('No pull_request in context; skipping post-comment step.');
+              return;
+            }
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = pr.number;
+
+            const marker = '<!-- copilot-pr-verification-reminder -->';
+            const body = `${marker}\n**Note:** Copilot PRs must be verified for trustworthiness, then commented with ` +
+              '`/azp run mcp - pullrequest - live` to get livetest invocations on AI submitted PRs.`;
+
+            // Check existing comments to avoid posting duplicates.
+            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number });
+            const alreadyPosted = comments.some(c => c.body && c.body.includes(marker));
+
+            if (alreadyPosted) {
+              core.info('Reminder comment already exists; skipping.');
+              return { skipped: true };
+            }
+
+            const res = await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            core.info('Posted reminder comment.');
+            return { skipped: false, comment_id: res.data.id };
