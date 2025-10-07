@@ -5,7 +5,7 @@ on:
       types: [opened, reopened, synchronize]
 
 permissions:
-  issues: write
+  issues: [write, pull_request]
 
 jobs:
   copilot-check:
