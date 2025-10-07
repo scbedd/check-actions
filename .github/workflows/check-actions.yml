@@ -50,8 +50,10 @@ jobs:
             const res = await github.rest.issues.createComment({ owner, repo, issue_number, body });
             core.info('Posted reminder comment.');
             return { skipped: false, comment_id: res.data.id };
+        continue-on-error: true
 
       - name: Debug auth and effective permissions
+        if: always()
         uses: actions/github-script@v7
         with:
           script: |
